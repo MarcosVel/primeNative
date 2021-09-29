@@ -12,7 +12,7 @@ import {
 } from './styles'
 import { Feather } from '@expo/vector-icons'
 import { COLORS } from '../../../styles'
-import { ScrollView } from 'react-native'
+import { ActivityIndicator, ScrollView } from 'react-native'
 import SliderItem from '../../components/SliderItem'
 
 import api, { key } from '../../services/api'
@@ -23,20 +23,12 @@ export default function Home() {
   const [ popularMovies, setPopularMovies ] = useState([]);
   const [ topMovies, setTopMovies ] = useState([]);
 
+  const [ loading, setLoading ] = useState(true);
+
   useEffect(() => {
     let isActive = true;
 
     async function getMovies() {
-      // REQUISIÇÃO DE TODOS
-      // const response = await api.get('/movie/now_playing', {
-      //   params: {
-      //     api_key: key,
-      //     language: 'pt-BR',
-      //     page: 1,
-      //   }
-      // })
-      // console.log(response.data)
-
       const [ nowData, popularData, topData ] = await Promise.all([
         api.get('/movie/now_playing', {
           params: {
@@ -69,10 +61,19 @@ export default function Home() {
       setPopularMovies(popularList)
       setTopMovies(topList)
     }
-
+    
+    setLoading(false)
     getMovies()
   }, [])
 
+  if (loading) {
+    return (
+      <Container>
+        <ActivityIndicator size="large" color="#fff" />
+      </Container>
+    )
+  }
+  
   return (
     <Container>
       <Header title="Prime Native" />
