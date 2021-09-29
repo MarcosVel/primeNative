@@ -38,7 +38,7 @@ export const SearchButton = styled.TouchableOpacity`
 `
 
 export const Label = styled.Text`
-  color: ${ COLORS.white};
+  color: ${ COLORS.white };
   padding: 20px 14px 8px;
   font-size: 24px;
   font-weight: bold;
@@ -52,7 +52,9 @@ export const Banner = styled.Image`
   margin: 0 14px;
 `
 
-export const SliderMovies = styled.FlatList`
+export const SliderMovies = styled.FlatList.attrs({
+  contentContainerStyle: { paddingRight: 14 }
+})`
   height: 250px;
   padding: 0 14px;
 `

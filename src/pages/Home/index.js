@@ -13,6 +13,7 @@ import {
 import { Feather } from '@expo/vector-icons'
 import { COLORS } from '../../../styles'
 import { ScrollView } from 'react-native'
+import SliderItem from '../../components/SliderItem'
 
 export default function Home() {
   return (
@@ -28,7 +29,7 @@ export default function Home() {
         </SearchButton>
       </SearchContainer>
 
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={ false }>
         <Label>Em cartaz</Label>
 
         <BannerButton activeOpacity={ 0.8 }>
@@ -41,7 +42,24 @@ export default function Home() {
         <SliderMovies
           horizontal
           data={ [ 1, 2, 3, 4 ] }
-          renderItem={ ({ item }) => {}}
+          renderItem={ ({ item }) => <SliderItem /> }
+          showsHorizontalScrollIndicator={ false }
+        />
+
+        <Label>Populares</Label>
+        <SliderMovies
+          horizontal
+          data={ [ 1, 2, 3, 4 ] }
+          renderItem={ ({ item }) => <SliderItem /> }
+          showsHorizontalScrollIndicator={ false }
+        />
+
+        <Label>Mais votados</Label>
+        <SliderMovies
+          horizontal
+          data={ [ 1, 2, 3, 4 ] }
+          renderItem={ ({ item }) => <SliderItem /> }
+          showsHorizontalScrollIndicator={ false }
         />
 
       </ScrollView>
