@@ -27,6 +27,7 @@ export default function Home() {
     let isActive = true;
 
     async function getMovies() {
+      // REQUISIÇÃO DE TODOS
       // const response = await api.get('/movie/now_playing', {
       //   params: {
       //     api_key: key,
