@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../../components/Header'
 import {
   Container,
@@ -13,8 +13,66 @@ import {
 import { Feather } from '@expo/vector-icons'
 import { COLORS } from '../../../styles'
 import { ScrollView } from 'react-native'
+import SliderItem from '../../components/SliderItem'
+
+import api, { key } from '../../services/api'
+import { getListMovies } from '../../utils/movie'
 
 export default function Home() {
+  const [ nowMovies, setNowMovies ] = useState([]);
+  const [ popularMovies, setPopularMovies ] = useState([]);
+  const [ topMovies, setTopMovies ] = useState([]);
+
+  useEffect(() => {
+    let isActive = true;
+
+    async function getMovies() {
+      // REQUISIÇÃO DE TODOS
+      // const response = await api.get('/movie/now_playing', {
+      //   params: {
+      //     api_key: key,
+      //     language: 'pt-BR',
+      //     page: 1,
+      //   }
+      // })
+      // console.log(response.data)
+
+      const [ nowData, popularData, topData ] = await Promise.all([
+        api.get('/movie/now_playing', {
+          params: {
+            api_key: key,
+            language: 'pt-BR',
+            page: 1,
+          }
+        }),
+        api.get('/movie/popular', {
+          params: {
+            api_key: key,
+            language: 'pt-BR',
+            page: 1,
+          }
+        }),
+        api.get('/movie/top_rated', {
+          params: {
+            api_key: key,
+            language: 'pt-BR',
+            page: 1,
+          }
+        }),
+      ])
+
+      const nowList = getListMovies(10, nowData.data.results);
+      const popularList = getListMovies(7, popularData.data.results);
+      const topList = getListMovies(5, topData.data.results);
+
+      setNowMovies(nowList)
+      setPopularMovies(popularList)
+      setTopMovies(topList)
+    }
+
+    getMovies()
+  }, [])
+
   return (
     <Container>
       <Header title="Prime Native" />
@@ -28,7 +86,7 @@ export default function Home() {
         </SearchButton>
       </SearchContainer>
 
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={ false }>
         <Label>Em cartaz</Label>
 
         <BannerButton activeOpacity={ 0.8 }>
@@ -40,8 +98,28 @@ export default function Home() {
 
         <SliderMovies
           horizontal
-          data={ [ 1, 2, 3, 4 ] }
-          renderItem={ ({ item }) => {}}
+          data={ nowMovies }
+          renderItem={ ({ item }) => <SliderItem data={ item } /> }
+          keyExtractor={ (item) => String(item.id) }
+          showsHorizontalScrollIndicator={ false }
+        />
+
+        <Label>Populares</Label>
+        <SliderMovies
+          horizontal
+          data={ popularMovies }
+          renderItem={ ({ item }) => <SliderItem data={ item } /> }
+          keyExtractor={ (item) => String(item.id) }
+          showsHorizontalScrollIndicator={ false }
+        />
+
+        <Label>Mais votados</Label>
+        <SliderMovies
+          horizontal
+          data={ topMovies }
+          renderItem={ ({ item }) => <SliderItem data={ item } /> }
+          keyExtractor={ (item) => String(item.id) }
+          showsHorizontalScrollIndicator={ false }
         />
 
       </ScrollView>

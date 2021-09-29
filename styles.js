@@ -6,5 +6,6 @@ export const COLORS = {
   blackBackground: '#141a29',
   // white04: 'rgba(255, 255, 255, 0.4)',
   white04: 'rgba(188, 188, 188, 0.5)',
-  placeholder: '#c9c9c9'
+  placeholder: '#c9c9c9',
+  orange: '#e7a74e',
 }
