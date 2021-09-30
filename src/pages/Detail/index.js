@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { Banner, ButtonLink, Container, ContentArea, Header, HeaderButton, Rate, Title } from './styles'
+import { Banner, ButtonLink, Container, ContentArea, Description, Header, HeaderButton, ListGenres, Rate, Title } from './styles'
 import { Feather, MaterialIcons } from '@expo/vector-icons'
 import { COLORS } from '../../../styles'
-import { StatusBar } from 'react-native'
+import { ScrollView, StatusBar } from 'react-native'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import api, { key } from '../../services/api'
 import Stars from 'react-native-stars'
+import Genres from '../../components/Genres'
 
 export default function Detail() {
   const navigation = useNavigation();
@@ -80,8 +81,22 @@ export default function Detail() {
           halfStar={ <MaterialIcons name='star-half' size={ 24 } color={ COLORS.orange } /> }
           disable={ true }
         />
-        <Rate>{movie.vote_average}/10</Rate>
+        <Rate>{ movie.vote_average }/10</Rate>
       </ContentArea>
+
+      <ListGenres
+        data={ movie?.genres }
+        horizontal={ true }
+        showsHorizontalScrollIndicator={ false }
+        keyExtractor={ (item) => String(item.id) }
+        renderItem={ ({ item }) => <Genres data={ item } /> }
+      />
+
+      <ScrollView showsVerticalScrollIndicator={ false }>
+        <Title>Descrição</Title>
+        <Description>{ movie.overview }</Description>
+      </ScrollView>
+
     </Container>
   )
 }

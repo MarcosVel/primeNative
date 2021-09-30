@@ -63,7 +63,21 @@ export const ContentArea = styled.View`
 
 export const Rate = styled.Text`
   font-size: 18px;
-  color: ${ COLORS.white};
+  color: ${ COLORS.white };
   font-weight: bold;
+`
 
+export const ListGenres = styled.FlatList.attrs({
+  contentContainerStyle: { paddingRight: 16 }
+})`
+  padding: 8px 16px;
+  min-height: 45px;
+  max-height: 45px;
+`
+
+export const Description = styled.Text`
+  padding: 0 16px 32px;
+  color: ${ COLORS.white };
+  font-size: 16px;
+  line-height: 22px;
 `
