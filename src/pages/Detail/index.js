@@ -2,17 +2,19 @@ import React, { useEffect, useState } from 'react'
 import { Banner, ButtonLink, Container, ContentArea, Description, Header, HeaderButton, ListGenres, Rate, Title } from './styles'
 import { Feather, MaterialIcons } from '@expo/vector-icons'
 import { COLORS } from '../../../styles'
-import { ScrollView, StatusBar } from 'react-native'
+import { Modal, ScrollView, StatusBar } from 'react-native'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import api, { key } from '../../services/api'
 import Stars from 'react-native-stars'
 import Genres from '../../components/Genres'
+import ModalLink from '../../components/ModalLink'
 
 export default function Detail() {
   const navigation = useNavigation();
   const route = useRoute();
 
   const [ movie, setMovie ] = useState({});
+  const [ openLink, setOpenLink ] = useState(false);
 
   useEffect(() => {
     let isActive = true;
@@ -64,7 +66,7 @@ export default function Detail() {
         resizeMethod='resize'
       />
 
-      <ButtonLink activeOpacity={ .7 } >
+      <ButtonLink activeOpacity={ .7 } onPress={ () => setOpenLink(true) }>
         <Feather name='link' size={ 24 } color={ COLORS.white } />
       </ButtonLink>
 
@@ -81,7 +83,7 @@ export default function Detail() {
           halfStar={ <MaterialIcons name='star-half' size={ 24 } color={ COLORS.orange } /> }
           disable={ true }
         />
-        <Rate>{ movie.vote_average }/10</Rate>
+        <Rate>{ movie?.vote_average }/10</Rate>
       </ContentArea>
 
       <ListGenres
@@ -94,8 +96,20 @@ export default function Detail() {
 
       <ScrollView showsVerticalScrollIndicator={ false }>
         <Title>Descrição</Title>
-        <Description>{ movie.overview }</Description>
+        <Description>{ movie?.overview }</Description>
       </ScrollView>
+
+      <Modal
+        animationType='slide'
+        visible={ openLink }
+        transparent
+      >
+        <ModalLink
+          link={ movie?.homepage }
+          title={ movie?.title }
+          closeModal={ () => setOpenLink(false) }
+        />
+      </Modal>
 
     </Container>
   )
