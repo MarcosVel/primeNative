@@ -18,6 +18,7 @@ import SliderItem from '../../components/SliderItem'
 
 import api, { key } from '../../services/api'
 import { getListMovies, randomBanner } from '../../utils/movie'
+import { useNavigation } from '@react-navigation/native'
 
 export default function Home() {
   const [ nowMovies, setNowMovies ] = useState([]);
@@ -26,6 +27,8 @@ export default function Home() {
   const [ bannerMovie, setBannerMovie ] = useState({});
 
   const [ loading, setLoading ] = useState(true);
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     let isActive = true;
@@ -80,6 +83,11 @@ export default function Home() {
     }
   }, [])
 
+  function navigationDetailsPage(item) {
+    // console.log(item.id)
+    navigation.navigate('Detail', { id: item.id })
+  }
+
   if (loading) {
     return (
       <ContainerLoading>
@@ -104,7 +112,7 @@ export default function Home() {
       <ScrollView showsVerticalScrollIndicator={ false }>
         <Label>Em cartaz</Label>
 
-        <BannerButton activeOpacity={ 0.8 } onPress={ () => { } }>
+        <BannerButton activeOpacity={ 0.8 } onPress={ () => navigationDetailsPage(bannerMovie) }>
           <Banner
             source={ { uri: `https://image.tmdb.org/t/p/original/${ bannerMovie.backdrop_path }` } }
             resizeMethod='resize'
@@ -114,7 +122,7 @@ export default function Home() {
         <SliderMovies
           horizontal
           data={ nowMovies }
-          renderItem={ ({ item }) => <SliderItem data={ item } /> }
+          renderItem={ ({ item }) => <SliderItem data={ item } navigatePage={ () => navigationDetailsPage(item) } /> }
           keyExtractor={ (item) => String(item.id) }
           showsHorizontalScrollIndicator={ false }
         />
@@ -123,7 +131,7 @@ export default function Home() {
         <SliderMovies
           horizontal
           data={ popularMovies }
-          renderItem={ ({ item }) => <SliderItem data={ item } /> }
+          renderItem={ ({ item }) => <SliderItem data={ item } navigatePage={ () => navigationDetailsPage(item) } /> }
           keyExtractor={ (item) => String(item.id) }
           showsHorizontalScrollIndicator={ false }
         />
@@ -132,7 +140,7 @@ export default function Home() {
         <SliderMovies
           horizontal
           data={ topMovies }
-          renderItem={ ({ item }) => <SliderItem data={ item } /> }
+          renderItem={ ({ item }) => <SliderItem data={ item } navigatePage={ () => navigationDetailsPage(item) } /> }
           keyExtractor={ (item) => String(item.id) }
           showsHorizontalScrollIndicator={ false }
         />
