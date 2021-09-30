@@ -8,4 +8,5 @@ export const COLORS = {
   white04: 'rgba(188, 188, 188, 0.5)',
   placeholder: '#c9c9c9',
   orange: '#e7a74e',
+  backButtonRounded: 'rgba(25, 26, 48, 0.8)',
 }
