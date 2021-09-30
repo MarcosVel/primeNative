@@ -8,35 +8,31 @@ import {
   Label,
   BannerButton,
   Banner,
-  SliderMovies
+  SliderMovies,
+  ContainerLoading
 } from './styles'
 import { Feather } from '@expo/vector-icons'
 import { COLORS } from '../../../styles'
-import { ScrollView } from 'react-native'
+import { ActivityIndicator, ScrollView } from 'react-native'
 import SliderItem from '../../components/SliderItem'
 
 import api, { key } from '../../services/api'
-import { getListMovies } from '../../utils/movie'
+import { getListMovies, randomBanner } from '../../utils/movie'
 
 export default function Home() {
   const [ nowMovies, setNowMovies ] = useState([]);
   const [ popularMovies, setPopularMovies ] = useState([]);
   const [ topMovies, setTopMovies ] = useState([]);
+  const [ bannerMovie, setBannerMovie ] = useState({});
+
+  const [ loading, setLoading ] = useState(true);
 
   useEffect(() => {
     let isActive = true;
+    // garantir que quando mudar de tela pare as requisições
+    const ac = new AbortController();
 
     async function getMovies() {
-      // REQUISIÇÃO DE TODOS
-      // const response = await api.get('/movie/now_playing', {
-      //   params: {
-      //     api_key: key,
-      //     language: 'pt-BR',
-      //     page: 1,
-      //   }
-      // })
-      // console.log(response.data)
-
       const [ nowData, popularData, topData ] = await Promise.all([
         api.get('/movie/now_playing', {
           params: {
@@ -61,17 +57,36 @@ export default function Home() {
         }),
       ])
 
-      const nowList = getListMovies(10, nowData.data.results);
-      const popularList = getListMovies(7, popularData.data.results);
-      const topList = getListMovies(5, topData.data.results);
+      if (isActive) {
+        const nowList = getListMovies(10, nowData.data.results);
+        const popularList = getListMovies(7, popularData.data.results);
+        const topList = getListMovies(5, topData.data.results);
 
-      setNowMovies(nowList)
-      setPopularMovies(popularList)
-      setTopMovies(topList)
+        setBannerMovie(nowData.data.results[ randomBanner(nowData.data.results) ])
+
+        setNowMovies(nowList)
+        setPopularMovies(popularList)
+        setTopMovies(topList)
+        setLoading(false)
+      }
     }
 
-    getMovies()
+    getMovies();
+
+    // parar as requisições ao sair da tela
+    return () => {
+      isActive = false;
+      ac.abort();
+    }
   }, [])
+
+  if (loading) {
+    return (
+      <ContainerLoading>
+        <ActivityIndicator size="large" color={ COLORS.white } />
+      </ContainerLoading>
+    )
+  }
 
   return (
     <Container>
@@ -89,9 +104,9 @@ export default function Home() {
       <ScrollView showsVerticalScrollIndicator={ false }>
         <Label>Em cartaz</Label>
 
-        <BannerButton activeOpacity={ 0.8 }>
+        <BannerButton activeOpacity={ 0.8 } onPress={ () => { } }>
           <Banner
-            source={ { uri: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1159&q=80' } }
+            source={ { uri: `https://image.tmdb.org/t/p/original/${ bannerMovie.backdrop_path }` } }
             resizeMethod='resize'
           />
         </BannerButton>
