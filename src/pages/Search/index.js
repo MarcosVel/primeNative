@@ -43,6 +43,10 @@ export default function Search() {
 
   }, [])
 
+  function navigationDetailsPage(item) {
+    navigation.navigate('Detail', { id: item.id })
+  }
+
   if (loading) {
     return (
       <ContainerLoading>
@@ -58,7 +62,7 @@ export default function Search() {
         showsVerticalScrollIndicator={ false }
         keyExtractor={ (item) => String(item.id) }
         renderItem={ ({ item }) =>
-          <SearchItem data={ item } />
+          <SearchItem data={ item } navigatePage={ () => navigationDetailsPage(item) } />
         }
         contentContainerStyle={ {
           paddingBottom: 100

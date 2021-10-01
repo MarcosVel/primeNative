@@ -133,8 +133,10 @@ export default function Home() {
         <SliderMovies
           horizontal
           data={ nowMovies }
-          renderItem={ ({ item }) => <SliderItem data={ item } navigatePage={ () => navigationDetailsPage(item) } /> }
           keyExtractor={ (item) => String(item.id) }
+          renderItem={ ({ item }) =>
+            <SliderItem data={ item } navigatePage={ () => navigationDetailsPage(item) } />
+          }
           showsHorizontalScrollIndicator={ false }
         />
 
@@ -142,8 +144,10 @@ export default function Home() {
         <SliderMovies
           horizontal
           data={ popularMovies }
-          renderItem={ ({ item }) => <SliderItem data={ item } navigatePage={ () => navigationDetailsPage(item) } /> }
           keyExtractor={ (item) => String(item.id) }
+          renderItem={ ({ item }) =>
+            <SliderItem data={ item } navigatePage={ () => navigationDetailsPage(item) } />
+          }
           showsHorizontalScrollIndicator={ false }
         />
 
@@ -151,8 +155,10 @@ export default function Home() {
         <SliderMovies
           horizontal
           data={ topMovies }
-          renderItem={ ({ item }) => <SliderItem data={ item } navigatePage={ () => navigationDetailsPage(item) } /> }
           keyExtractor={ (item) => String(item.id) }
+          renderItem={ ({ item }) =>
+            <SliderItem data={ item } navigatePage={ () => navigationDetailsPage(item) } />
+          }
           showsHorizontalScrollIndicator={ false }
         />
 
