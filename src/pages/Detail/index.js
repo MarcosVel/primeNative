@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
+import { Modal, ScrollView, StatusBar, ToastAndroid } from 'react-native'
 import { Banner, ButtonLink, Container, ContentArea, Description, Header, HeaderButton, ListGenres, Rate, Title } from './styles'
-import { Feather, MaterialIcons } from '@expo/vector-icons'
 import { COLORS } from '../../../styles'
-import { Modal, ScrollView, StatusBar } from 'react-native'
+import { Feather, MaterialIcons, Ionicons } from '@expo/vector-icons'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import api, { key } from '../../services/api'
 import Stars from 'react-native-stars'
 import Genres from '../../components/Genres'
 import ModalLink from '../../components/ModalLink'
+import { saveMovie } from '../../utils/storage'
 
 export default function Detail() {
   const navigation = useNavigation();
@@ -46,6 +47,11 @@ export default function Detail() {
 
   }, [])
 
+  async function favoriteMovie(movie) {
+    await saveMovie('@primenative', movie)
+    ToastAndroid.show('Salvo em Meus Filmes 😉', ToastAndroid.SHORT)
+  }
+
   return (
     <Container>
       <StatusBar hidden />
@@ -54,8 +60,8 @@ export default function Detail() {
         <HeaderButton activeOpacity={ .6 } onPress={ () => navigation.goBack() }>
           <Feather name='arrow-left' size={ 28 } color={ COLORS.white } />
         </HeaderButton>
-        <HeaderButton activeOpacity={ .6 } >
-          <Feather name='bookmark' size={ 28 } color={ COLORS.white } />
+        <HeaderButton activeOpacity={ .6 } onPress={ () => favoriteMovie(movie) }>
+          <Ionicons name='bookmark-outline' size={ 25 } color={ COLORS.white } />
         </HeaderButton>
       </Header>
 
