@@ -31,7 +31,32 @@ export async function saveMovie(key, newMovie) {
 
 
 // Deletar algum filme específico
+export async function deleteMovie(id) {
+  let moviesStored = await getMoviesSave('@primenative');
 
+  // filtra o filme selecionado e retorna todos que não tem o id dele
+  let myMovies = moviesStored.filter(item => {
+    return (item.id !== id)
+  })
 
-// FIltrar algum filme se já está salvo.
+  // Atualiza a lista sem o filme com o ID que havia sido selecionado
+  await AsyncStorage.setItem('@primenative', JSON.stringify(myMovies));
+  console.log("Retirado com sucesso")
+
+  // Retorna a lista atualizada
+  return myMovies;
+}
+
+// Filtrar algum filme se já está salvo.
+export async function hasMovie(movie) {
+  let moviesStored = await getMoviesSave('@primenative');
+
+  const hasMovie = moviesStored.find(item => item.id === movie.id)
+
+  if (hasMovie) {
+    return true;
+  }
+
+  return false;
+}
 

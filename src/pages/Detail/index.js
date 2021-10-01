@@ -8,7 +8,7 @@ import api, { key } from '../../services/api'
 import Stars from 'react-native-stars'
 import Genres from '../../components/Genres'
 import ModalLink from '../../components/ModalLink'
-import { saveMovie } from '../../utils/storage'
+import { saveMovie, hasMovie, deleteMovie } from '../../utils/storage'
 
 export default function Detail() {
   const navigation = useNavigation();
@@ -16,6 +16,7 @@ export default function Detail() {
 
   const [ movie, setMovie ] = useState({});
   const [ openLink, setOpenLink ] = useState(false);
+  const [ favoritedMovie, setFavoritedMovie ] = useState(false);
 
   useEffect(() => {
     let isActive = true;
@@ -34,6 +35,9 @@ export default function Detail() {
       if (isActive) {
         setMovie(response.data);
         // console.log(response.data);
+
+        const isFavorite = await hasMovie(response.data)
+        setFavoritedMovie(isFavorite);
       }
     }
 
@@ -48,8 +52,15 @@ export default function Detail() {
   }, [])
 
   async function favoriteMovie(movie) {
-    await saveMovie('@primenative', movie)
-    ToastAndroid.show('Salvo em Meus Filmes 😉', ToastAndroid.SHORT)
+    if(favoritedMovie) {
+      await deleteMovie(movie.id);
+      setFavoritedMovie(false);
+      ToastAndroid.show('Retirado de Meus Filmes 😢', ToastAndroid.SHORT);
+    } else {
+      await saveMovie('@primenative', movie);
+      setFavoritedMovie(true);
+      ToastAndroid.show('Salvo em Meus Filmes 😉', ToastAndroid.SHORT);
+    }
   }
 
   return (
@@ -61,7 +72,11 @@ export default function Detail() {
           <Feather name='arrow-left' size={ 28 } color={ COLORS.white } />
         </HeaderButton>
         <HeaderButton activeOpacity={ .6 } onPress={ () => favoriteMovie(movie) }>
-          <Ionicons name='bookmark-outline' size={ 25 } color={ COLORS.white } />
+          { favoritedMovie ? (
+            <Ionicons name='bookmark' size={ 25 } color={ COLORS.white } />
+          ) : (
+            <Ionicons name='bookmark-outline' size={ 25 } color={ COLORS.white } />
+          ) }
         </HeaderButton>
       </Header>
 
