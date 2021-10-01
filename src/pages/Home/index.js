@@ -25,6 +25,7 @@ export default function Home() {
   const [ popularMovies, setPopularMovies ] = useState([]);
   const [ topMovies, setTopMovies ] = useState([]);
   const [ bannerMovie, setBannerMovie ] = useState({});
+  const [ input, setInput ] = useState('');
 
   const [ loading, setLoading ] = useState(true);
 
@@ -37,7 +38,7 @@ export default function Home() {
 
     async function getMovies() {
       const [ nowData, popularData, topData ] = await Promise.all([
-        api.get('/movie/now_playing', {
+        api.get('/movie/upcoming', {
           params: {
             api_key: key,
             language: 'pt-BR',
@@ -65,7 +66,7 @@ export default function Home() {
         const popularList = getListMovies(7, popularData.data.results);
         const topList = getListMovies(5, topData.data.results);
 
-        setBannerMovie(nowData.data.results[ randomBanner(nowData.data.results) ])
+        setBannerMovie(popularData.data.results[ randomBanner(popularData.data.results) ])
 
         setNowMovies(nowList)
         setPopularMovies(popularList)
@@ -88,6 +89,14 @@ export default function Home() {
     navigation.navigate('Detail', { id: item.id })
   }
 
+  function handleSearchMovie() {
+    if (input === '') return;
+
+    navigation.navigate('Search', { nameMovie: input })
+
+    setInput('')
+  }
+
   if (loading) {
     return (
       <ContainerLoading>
@@ -103,8 +112,10 @@ export default function Home() {
       <SearchContainer>
         <Input
           placeholder="Ex Vingadores"
+          value={ input }
+          onChangeText={ (text) => setInput(text) }
         />
-        <SearchButton>
+        <SearchButton onPress={ handleSearchMovie }>
           <Feather name="search" size={ 30 } color={ COLORS.white } />
         </SearchButton>
       </SearchContainer>
