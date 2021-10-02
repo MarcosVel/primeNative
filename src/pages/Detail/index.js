@@ -51,7 +51,7 @@ export default function Detail() {
 
   }, [])
 
-  async function favoriteMovie(movie) {
+  async function handleFavoriteMovie(movie) {
     if(favoritedMovie) {
       await deleteMovie(movie.id);
       setFavoritedMovie(false);
@@ -71,7 +71,7 @@ export default function Detail() {
         <HeaderButton activeOpacity={ .6 } onPress={ () => navigation.goBack() }>
           <Feather name='arrow-left' size={ 28 } color={ COLORS.white } />
         </HeaderButton>
-        <HeaderButton activeOpacity={ .6 } onPress={ () => favoriteMovie(movie) }>
+        <HeaderButton activeOpacity={ .6 } onPress={ () => handleFavoriteMovie(movie) }>
           { favoritedMovie ? (
             <Ionicons name='bookmark' size={ 25 } color={ COLORS.white } />
           ) : (

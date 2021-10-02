@@ -36,7 +36,7 @@ export default function SearchItem({ data, navigatePage }) {
         <Title>{ data?.title }</Title>
 
         <RateContainer>
-          <MaterialIcons name='star' size={ 16 } color={ COLORS.orange } />
+          <MaterialIcons name='star' size={ 17 } color={ COLORS.orange } />
           <Rate>{ data?.vote_average }/10</Rate>
         </RateContainer>
       </InfoMovie>
