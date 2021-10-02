@@ -5,19 +5,19 @@ import { COLORS } from '../../../styles'
 import { Swipeable } from 'react-native-gesture-handler'
 import { Animated } from 'react-native'
 
-export default function FavoriteItem({ data }) {
+export default function FavoriteItem({ data, deleteMovie, navigatePage }) {
   return (
     <Swipeable
       overshootRight={ false }
       renderRightActions={ () => (
         <Animated.View style={ { justifyContent: 'center' } }>
-          <DeleteButton onPress={ () => alert('deletar') }>
+          <DeleteButton onPress={ () => deleteMovie(data.id) }>
             <Feather name="trash-2" size={ 24 } color={ COLORS.white } />
           </DeleteButton>
         </Animated.View>
       ) }
     >
-      <Container>
+      <Container activeOpacity={ 0.7 } onPress={ () => navigatePage() }>
         <InfoMovie>
           <Title size={ 22 } numberOfLines={ 1 }>{ data?.title }</Title>
 

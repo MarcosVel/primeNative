@@ -41,7 +41,6 @@ export async function deleteMovie(id) {
 
   // Atualiza a lista sem o filme com o ID que havia sido selecionado
   await AsyncStorage.setItem('@primenative', JSON.stringify(myMovies));
-  console.log("Retirado com sucesso")
 
   // Retorna a lista atualizada
   return myMovies;

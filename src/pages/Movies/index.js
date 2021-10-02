@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import Header from '../../components/Header'
 import { Container, ListMovies } from './styles'
-import { getMoviesSave } from '../../utils/storage'
+import { getMoviesSave, deleteMovie } from '../../utils/storage'
 import FavoriteItem from '../../components/FavoriteItem';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { ToastAndroid } from 'react-native';
 
 export default function Movies() {
   const [ movies, setMovies ] = useState([]);
+
+  const navigation = useNavigation();
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     let isActive = true;
@@ -26,7 +31,17 @@ export default function Movies() {
       isActive = false;
     }
 
-  }, []);
+  }, [ isFocused ]);
+
+  async function handleDelete(id) {
+    const result = await deleteMovie(id);
+    ToastAndroid.show('Filme retirado', ToastAndroid.SHORT)
+    setMovies(result);
+  }
+
+  function navigateDetailsPage(item) {
+    navigation.navigate('Detail', { id: item.id });
+  }
 
   return (
     <Container>
@@ -37,7 +52,11 @@ export default function Movies() {
         showsVerticalScrollIndicator={ false }
         keyExtractor={ (item) => String(item.id) }
         renderItem={ ({ item }) =>
-          <FavoriteItem data={ item } />
+          <FavoriteItem
+            data={ item }
+            deleteMovie={ handleDelete }
+            navigatePage={ () => navigateDetailsPage(item) }
+          />
         }
       />
     </Container>
