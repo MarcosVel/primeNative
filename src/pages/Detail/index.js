@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
+import { Modal, ScrollView, StatusBar, ToastAndroid } from 'react-native'
 import { Banner, ButtonLink, Container, ContentArea, Description, Header, HeaderButton, ListGenres, Rate, Title } from './styles'
-import { Feather, MaterialIcons } from '@expo/vector-icons'
 import { COLORS } from '../../../styles'
-import { Modal, ScrollView, StatusBar } from 'react-native'
+import { Feather, MaterialIcons, Ionicons } from '@expo/vector-icons'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import api, { key } from '../../services/api'
 import Stars from 'react-native-stars'
 import Genres from '../../components/Genres'
 import ModalLink from '../../components/ModalLink'
+import { saveMovie, hasMovie, deleteMovie } from '../../utils/storage'
 
 export default function Detail() {
   const navigation = useNavigation();
@@ -15,6 +16,7 @@ export default function Detail() {
 
   const [ movie, setMovie ] = useState({});
   const [ openLink, setOpenLink ] = useState(false);
+  const [ favoritedMovie, setFavoritedMovie ] = useState(false);
 
   useEffect(() => {
     let isActive = true;
@@ -33,6 +35,9 @@ export default function Detail() {
       if (isActive) {
         setMovie(response.data);
         // console.log(response.data);
+
+        const isFavorite = await hasMovie(response.data)
+        setFavoritedMovie(isFavorite);
       }
     }
 
@@ -46,6 +51,18 @@ export default function Detail() {
 
   }, [])
 
+  async function handleFavoriteMovie(movie) {
+    if(favoritedMovie) {
+      await deleteMovie(movie.id);
+      setFavoritedMovie(false);
+      ToastAndroid.show('Retirado de Meus Filmes 😢', ToastAndroid.SHORT);
+    } else {
+      await saveMovie('@primenative', movie);
+      setFavoritedMovie(true);
+      ToastAndroid.show('Salvo em Meus Filmes 😉', ToastAndroid.SHORT);
+    }
+  }
+
   return (
     <Container>
       <StatusBar hidden />
@@ -54,8 +71,12 @@ export default function Detail() {
         <HeaderButton activeOpacity={ .6 } onPress={ () => navigation.goBack() }>
           <Feather name='arrow-left' size={ 28 } color={ COLORS.white } />
         </HeaderButton>
-        <HeaderButton activeOpacity={ .6 } >
-          <Feather name='bookmark' size={ 28 } color={ COLORS.white } />
+        <HeaderButton activeOpacity={ .6 } onPress={ () => handleFavoriteMovie(movie) }>
+          { favoritedMovie ? (
+            <Ionicons name='bookmark' size={ 25 } color={ COLORS.white } />
+          ) : (
+            <Ionicons name='bookmark-outline' size={ 25 } color={ COLORS.white } />
+          ) }
         </HeaderButton>
       </Header>
 

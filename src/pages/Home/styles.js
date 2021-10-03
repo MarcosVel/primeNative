@@ -11,7 +11,6 @@ export const ContainerLoading = styled.SafeAreaView`
 export const Container = styled.SafeAreaView`
   flex: 1;
   background-color: ${ COLORS.blackBackground };
-  padding: 20px 0 4px;
 `;
 
 export const SearchContainer = styled.View`
